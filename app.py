@@ -3,6 +3,7 @@ from utils.pdf_reader import extract_text_from_pdf
 from ml.skill_extractor import extract_skills
 from ml.model import analyze_resume
 import pickle
+from utils.chatbot import chatbot_response
 
 app = Flask(__name__)
 
@@ -93,38 +94,67 @@ def analyze():
             "required": required_skills
         })
 
-    # Sort roles
+    # 🔥 Sort roles
     role_scores = sorted(role_scores, key=lambda x: x["score"], reverse=True)
 
-    # 🔥 DEFINE BEST
+    # 🔥 Best role
     best = role_scores[0]
 
-    # Extract best values
+    best_role = best["role"]
     required_skills = best["required"]
     matched_skills = best["matched"]
     missing_skills = best["missing"]
     score = best["score"]
-    best_role = best["role"]
 
-    # 🔥 Best role
-    best_role = role_scores[0]["role"]
-    required_skills = best["required"]
-    matched_skills = role_scores[0]["matched"]
-    missing_skills = role_scores[0]["missing"]
-    score = role_scores[0]["score"]
+    # 🔥 Recommendations
+    recommendations = []
+
+    skill_to_course = {
+        "react": "Learn React (Frontend Development)",
+        "bootstrap": "Learn Bootstrap (UI Design)",
+        "machine learning": "Learn ML Algorithms",
+        "sql": "Practice SQL Queries",
+        "java": "Learn Advanced Java (Spring Boot)",
+        "python": "Learn Python Libraries",
+        "html": "Improve HTML",
+        "css": "Learn CSS Flexbox",
+        "javascript": "Master JavaScript",
+        "flask": "Build Flask Projects"
+    }
+
+    for skill in missing_skills:
+        if skill in skill_to_course:
+            recommendations.append(skill_to_course[skill])
+        else:
+            recommendations.append(f"Learn {skill}")
 
     result = {
         "prediction": best_role,
         "ranked_roles": role_scores,
         "user_skills": user_skills,
-        "required_skills": required_skills, 
+        "required_skills": required_skills,
         "matched_skills": matched_skills,
         "missing_skills": missing_skills,
+        "recommendations": recommendations,
         "filename": file.filename,
         "score": score
     }
 
     return render_template("result.html", result=result)
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_message = request.form.get("message")
+
+    missing_skills = request.form.getlist("missing_skills")
+    recommendations = request.form.getlist("recommendations")
+    best_role = request.form.get("role")
+
+    bot_reply = chatbot_response(user_message, missing_skills, recommendations, best_role)
+
+    return {"reply": bot_reply}
+
 
 if __name__ == "__main__":
     app.run(debug=True)

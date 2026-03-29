@@ -11,7 +11,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: auto;
         }
 
@@ -20,6 +20,7 @@
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
         }
 
         .skills span {
@@ -40,8 +41,40 @@
         }
 
         .score {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        #chat-box {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        input {
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -50,15 +83,18 @@
 
 <div class="container">
 
+    <!-- File + Role -->
     <div class="card">
         <h3>📄 File: {{ result.filename }}</h3>
         <h3>🎯 Predicted Role: {{ result.prediction }}</h3>
     </div>
 
+    <!-- Score -->
     <div class="card">
         <p class="score">📊 Score: {{ result.score }}%</p>
     </div>
 
+    <!-- Required Skills -->
     <div class="card">
         <h3>📋 Required Skills</h3>
         {% for skill in result.required_skills %}
@@ -66,6 +102,7 @@
         {% endfor %}
     </div>
 
+    <!-- Matched Skills -->
     <div class="card">
         <h3>✅ Matched Skills</h3>
         {% for skill in result.matched_skills %}
@@ -73,6 +110,7 @@
         {% endfor %}
     </div>
 
+    <!-- Missing Skills -->
     <div class="card">
         <h3>❌ Missing Skills</h3>
         {% for skill in result.missing_skills %}
@@ -80,19 +118,77 @@
         {% endfor %}
     </div>
 
-    <a href="/">⬅ Analyze Another Resume</a>
+    <!-- 🔥 Recommendations -->
+    <div class="card">
+        <h3>🎯 Recommendations</h3>
+        {% for rec in result.recommendations %}
+            <p>✔ {{ rec }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- 🔥 Best Fit Roles -->
+    <div class="card">
+        <h3>🏆 Best Fit Roles</h3>
+        <ul>
+        {% for item in result.ranked_roles %}
+            <li><b>{{ loop.index }}. {{ item.role }}</b></li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Back Button -->
+    <a href="/" class="btn">⬅ Analyze Another Resume</a>
+
+    <!-- 🤖 Chatbot -->
+    <div class="card">
+        <h3>🤖 Career Chatbot</h3>
+
+        <div id="chat-box"></div>
+
+        <input type="text" id="user-input" placeholder="Ask something..." style="width:70%;">
+        <button onclick="sendMessage()">Send</button>
+    </div>
 
 </div>
 
+<script>
+function sendMessage() {
+    let message = document.getElementById("user-input").value;
+    let chatBox = document.getElementById("chat-box");
 
+    if (message.trim() === "") return;
 
-<h3>🏆 Best Fit Roles</h3>
+    chatBox.innerHTML += "<p><b>You:</b> " + message + "</p>";
 
-<ul>
-{% for item in result.ranked_roles %}
-    <p><b>{{ loop.index }}. {{ item.role }}</b></p>
-{% endfor %}
-</ul>
+    let formData = new URLSearchParams();
+
+    formData.append("message", message);
+    formData.append("role", "{{ result.prediction }}");
+
+    {% for skill in result.missing_skills %}
+    formData.append("missing_skills", "{{ skill }}");
+    {% endfor %}
+
+    {% for rec in result.recommendations %}
+    formData.append("recommendations", "{{ rec }}");
+    {% endfor %}
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        chatBox.innerHTML += "<p><b>Bot:</b> " + data.reply + "</p>";
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    document.getElementById("user-input").value = "";
+}
+</script>
 
 </body>
 </html>
