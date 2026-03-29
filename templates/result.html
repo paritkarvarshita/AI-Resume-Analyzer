@@ -1,22 +1,98 @@
-<p style="text-align:center; color:gray;">
-    📄 Uploaded File: {{ result.filename }}
-</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
 
-{% if result %}
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            padding: 30px;
+        }
 
-<h2>Results</h2>
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
 
-<p><b>Selected Role:</b> {{ result.prediction }}</p>
-<p><b>Uploaded File:</b> {{ result.filename }}</p>
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
 
-<p><b>Your Skills:</b> {{ result.user_skills }}</p>
-<p><b>Required Skills:</b> {{ result.required_skills }}</p>
+        .skills span {
+            display: inline-block;
+            padding: 8px;
+            margin: 5px;
+            border-radius: 8px;
+        }
 
-<p><b>Matched Skills:</b> {{ result.matched_skills }}</p>
-<p><b>Missing Skills:</b> {{ result.missing_skills }}</p>
+        .matched {
+            background: #d4edda;
+            color: green;
+        }
 
-<p><b>Score:</b> {{ result.score }}%</p>
+        .missing {
+            background: #f8d7da;
+            color: red;
+        }
 
-{% else %}
-<p>No data available</p>
-{% endif %}
+        .score {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <h3>📄 File: {{ result.filename }}</h3>
+        <h3>🎯 Predicted Role: {{ result.prediction }}</h3>
+    </div>
+
+    <div class="card">
+        <p class="score">📊 Score: {{ result.score }}%</p>
+    </div>
+
+    <div class="card">
+        <h3>📋 Required Skills</h3>
+        {% for skill in result.required_skills %}
+            <span class="matched">{{ skill }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h3>✅ Matched Skills</h3>
+        {% for skill in result.matched_skills %}
+            <span class="matched">{{ skill }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h3>❌ Missing Skills</h3>
+        {% for skill in result.missing_skills %}
+            <span class="missing">{{ skill }}</span>
+        {% endfor %}
+    </div>
+
+    <a href="/">⬅ Analyze Another Resume</a>
+
+</div>
+
+
+
+<h3>🏆 Best Fit Roles</h3>
+
+<ul>
+{% for item in result.ranked_roles %}
+    <p><b>{{ loop.index }}. {{ item.role }}</b></p>
+{% endfor %}
+</ul>
+
+</body>
+</html>

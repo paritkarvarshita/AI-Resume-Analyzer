@@ -1,38 +1,72 @@
-<form action="/analyze" method="POST" enctype="multipart/form-data">
-    
-    <input type="file" name="resume" required>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Resume Analyzer</title>
 
-    
-    <select name="role">
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
 
-        <option value="Data Scientist"
-            {% if role and role == "Data Scientist" %}selected{% endif %}>
-            Data Scientist
-        </option>
+        .container {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            margin: auto;
+        }
 
-        <option value="Web Developer"
-            {% if role and role == "Web Developer" %}selected{% endif %}>
-            Web Developer
-        </option>
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            width: 90%;
+        }
 
-        <option value="Java Developer"
-            {% if role and role == "Java Developer" %}selected{% endif %}>
-            Java Developer
-        </option>
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+        }
 
-        <option value="Software Engineer"
-            {% if role and role == "Software Engineer" %}selected{% endif %}>
-            Software Engineer
-        </option>
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
 
-    </select>
+<body>
 
-    <button type="submit">Analyze</button>
+<div class="container">
+    <h2>📄 AI Resume Analyzer</h2>
+
+    <p style="color:gray;">🤖 Role will be automatically predicted</p>
 
     {% if error %}
-    <p style="color:red; text-align:center; font-weight:bold;">
-        {{ error }}
-    </p>
-{% endif %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 
-</form>
+    <form action="/analyze" method="POST" enctype="multipart/form-data">
+        <input type="file" name="resume" required>
+        <button type="submit">Analyze Resume</button>
+    </form>
+
+    
+    <style>
+    .btn {
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+</style>
+</div>
+
+</body>
+</html>
