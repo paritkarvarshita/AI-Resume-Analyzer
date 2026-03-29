@@ -1,12 +1,38 @@
 <form action="/analyze" method="POST" enctype="multipart/form-data">
+    
     <input type="file" name="resume" required>
+
     
     <select name="role">
-        <option>Data Scientist</option>
-        <option>Web Developer</option>
-        <option>Java Developer</option>
-        <option>Software Engineer</option>
+
+        <option value="Data Scientist"
+            {% if role and role == "Data Scientist" %}selected{% endif %}>
+            Data Scientist
+        </option>
+
+        <option value="Web Developer"
+            {% if role and role == "Web Developer" %}selected{% endif %}>
+            Web Developer
+        </option>
+
+        <option value="Java Developer"
+            {% if role and role == "Java Developer" %}selected{% endif %}>
+            Java Developer
+        </option>
+
+        <option value="Software Engineer"
+            {% if role and role == "Software Engineer" %}selected{% endif %}>
+            Software Engineer
+        </option>
+
     </select>
 
     <button type="submit">Analyze</button>
+
+    {% if error %}
+    <p style="color:red; text-align:center; font-weight:bold;">
+        {{ error }}
+    </p>
+{% endif %}
+
 </form>

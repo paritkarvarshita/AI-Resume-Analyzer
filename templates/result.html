@@ -1,13 +1,22 @@
+<p style="text-align:center; color:gray;">
+    📄 Uploaded File: {{ result.filename }}
+</p>
+
+{% if result %}
+
 <h2>Results</h2>
 
 <p><b>Selected Role:</b> {{ result.prediction }}</p>
+<p><b>Uploaded File:</b> {{ result.filename }}</p>
 
 <p><b>Your Skills:</b> {{ result.user_skills }}</p>
-
 <p><b>Required Skills:</b> {{ result.required_skills }}</p>
 
 <p><b>Matched Skills:</b> {{ result.matched_skills }}</p>
-
 <p><b>Missing Skills:</b> {{ result.missing_skills }}</p>
 
-<a href="/">Go Back</a>
+<p><b>Score:</b> {{ result.score }}%</p>
+
+{% else %}
+<p>No data available</p>
+{% endif %}
