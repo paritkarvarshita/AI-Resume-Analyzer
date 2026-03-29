@@ -1,16 +1,34 @@
-job_roles = {
-    "Data Scientist": ["python", "machine learning", "data analysis", "sql"],
-    "Web Developer": ["html", "css", "javascript", "flask"],
-    "Software Engineer": ["java", "python", "sql"]
-}
-
 def analyze_resume(user_skills, role):
-    required_skills = job_roles.get(role, [])
 
-    missing_skills = list(set(required_skills) - set(user_skills))
+    role_skills = {
+        "Data Scientist": [
+            "python", "machine learning", "sql", "statistics",
+            "pandas", "numpy", "scikit-learn"
+        ],
 
-    return {
-        "required_skills": required_skills,
-        "user_skills": user_skills,
-        "missing_skills": missing_skills
+        "Web Developer": [
+            "html", "css", "javascript", "flask",
+            "react", "bootstrap"
+        ],
+
+        "Java Developer": [
+            "java", "sql", "spring", "hibernate"
+        ],
+
+        "Software Engineer": [
+            "python", "java", "sql",
+            "data structures", "algorithms"
+        ]
     }
+
+    # Normalize
+    user_skills = [skill.lower() for skill in user_skills]
+    required_skills = role_skills.get(role, [])
+
+    user_set = set(user_skills)
+    required_set = set(required_skills)
+
+    missing_skills = list(required_set - user_set)
+    matched_skills = list(required_set & user_set)
+
+    return required_skills, missing_skills, matched_skills

@@ -6,26 +6,33 @@ from ml.model import analyze_resume
 app = Flask(__name__)
 
 @app.route('/')
-def index():
-    return render_template('index.html')
-
+def home():
+    return render_template("index.html")
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
+
     file = request.files['resume']
     role = request.form['role']
 
-    # Step 1: Extract text
-    text = extract_text_from_pdf(file)
+    if file:
+        text = extract_text_from_pdf(file)
 
-    # Step 2: Extract skills
-    skills = extract_skills(text)
+        # Extract skills
+        user_skills = extract_skills(text)
 
-    # Step 3: Analyze
-    result = analyze_resume(skills, role)
+        # Analyze
+        required_skills, missing_skills, matched_skills = analyze_resume(user_skills, role)
 
-    return render_template('result.html', result=result)
+        result = {
+            "prediction": role,
+            "user_skills": user_skills,
+            "required_skills": required_skills,
+            "matched_skills": matched_skills,
+            "missing_skills": missing_skills
+        }
 
+        return render_template("result.html", result=result)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
