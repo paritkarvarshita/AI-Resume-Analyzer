@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analysis Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <header style="margin-bottom:40px;">
+            <a href="/" style="text-decoration:none; color:var(--stormy-sky); font-weight:600;"><i class="fas fa-arrow-left"></i> Analyze New</a>
+        </header>
+
+        <div class="grid-container">
+            <div class="card summary-card">
+                <div>
+                    <p style="opacity:0.8; font-size:0.9rem; text-transform:uppercase; font-weight:700;">Predicted Role</p>
+                    <h2 style="font-size:2.5rem;">{{ result.prediction }}</h2>
+                </div>
+                <div class="score-circle">
+                    <span class="score-num">{{ result.score }}%</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-check-circle" style="color:var(--sage-green);"></i> Skills Found</h3>
+                <div style="margin-top:20px;">
+                    {% for skill in result.matched_skills %}
+                    <span class="tag tag-match">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-times-circle" style="color:var(--burnt-sienna);"></i> Missing Skills</h3>
+                <div style="margin-top:20px;">
+                    {% for skill in result.missing_skills %}
+                    <span class="tag tag-missing">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card" style="grid-column: span 2;">
+                <h3><i class="fas fa-lightbulb" style="color:var(--burnt-sienna);"></i> AI Recommendations</h3>
+                <ul style="list-style:none; margin-top:20px;">
+                    {% for rec in result.recommendations %}
+                    <li style="padding:15px; background:var(--bg-light); border-radius:10px; margin-bottom:10px; display:flex; gap:15px;">
+                        <i class="fas fa-arrow-right" style="color:var(--sage-green); margin-top:5px;"></i>
+                        {{ rec }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

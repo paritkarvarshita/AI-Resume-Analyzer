@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+             <i class="fas fa-file-invoice" style="color:var(--burnt-sienna);"></i> <span>My CV Analyzer</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <div class="dropdown">
+                <a href="#">Template <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></a>
+            </div>
+            <div class="dropdown">
+                <a href="#">Services <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></a>
+            </div>
+            <a href="#">Order Resume <span class="hot-badge">Hot</span></a>
+            <a href="#">Blog</a>
+            <a href="#">Job Alert</a>
+            <a href="#" class="login-text">Login</a>
+            <a href="#" class="btn-signup">Sign Up</a>
+        </div>
+    </nav>
+
+    <main class="hero-container">
+        <div class="hero-content">
+            <p class="sub-heading">Career Inspiration</p>
+            <h1>“The only way to do <span>great work</span> is to love what you do.”</h1>
+            <p class="hero-p">Success starts with passion. Upload your resume and let our AI help you align your professional path with your true potential.</p>
+        </div>
+
+        <div class="hero-action">
+            <div class="upload-card">
+                <form action="/analyze" method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="resume" id="resume" required>
+                        <label for="resume">
+                            <i class="fas fa-cloud-upload-alt"></i><br>
+                            <span id="file-label-text">Drop your resume here</span>
+                            <p class="file-hint">Supports PDF and DOCX</p>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-main" id="analyzeBtn">Analyze My Resume</button>
+                </form>
+            </div>
+            
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
