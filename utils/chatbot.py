@@ -1,13 +1,13 @@
 def chatbot_response(user_message, missing_skills, recommendations, best_role):
     msg = user_message.lower()
 
-    if "learn" in msg or "next" in msg:
+    if any(word in msg for word in ["learn", "next", "study"]):
         if recommendations:
             return f"🎯 To become a {best_role}, you should learn: {', '.join(missing_skills[:3])}."
         else:
             return "✅ You already have strong skills!"
 
-    elif "skills" in msg:
+    elif any(word in msg for word in ["skills", "missing"]):
         if missing_skills:
             return "❌ You are missing: " + ", ".join(missing_skills)
         else:
@@ -16,7 +16,7 @@ def chatbot_response(user_message, missing_skills, recommendations, best_role):
     elif "role" in msg:
         return f"💼 Best role for you is: {best_role}"
 
-    elif "improve" in msg:
+    elif any(word in msg for word in ["improve", "better"]):
         return f"📈 Improve by learning: {', '.join(missing_skills[:3])}"
 
     else:
